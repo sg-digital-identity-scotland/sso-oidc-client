@@ -1,0 +1,9 @@
+HOST=${HOST}
+PORT=${PORT}
+SSL_ENABLED=true
+SSL_KEY_STORE_NAME=oidc-private-client
+SSL_KEY_STORE_PASSWORD=oidc-private-client
+SSL_KEY_ALIAS=oidc-private-client
+LOG_LEVEL=INFO
+DIS_ISSUER_URI=https://authz.swan.sign-in.service.gov.scot
+REDIRECT_URI=https://${HOST}:${PORT}/login/oauth2/code/dis

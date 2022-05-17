@@ -1,0 +1,45 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'com.google.cloud.tools.jib' version '3.1.4'
+}
+
+group = 'scot.gov.dis.sso.oidcclients'
+version = '0.0.1'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webflux:2.6.2'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.6.2'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.6.2'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+jib {
+	from {
+		image 'gcr.io/distroless/java11-debian11@sha256:4ab3d56ef3c5ea3c652096041e8f6ae12a40940ac5af81b3041a958bf0d72d1f'
+	}
+	to {
+		def imageName = project.getProperties().get('IMAGE_NAME')
+			? project.getProperties().get('IMAGE_NAME')
+			: project.getName()
+
+		def imageTag = project.getProperties().get('IMAGE_TAG')
+			? project.getProperties().get('IMAGE_TAG')
+			: '1.0.0'
+
+		image imageName + ':' + imageTag
+	}
+}
