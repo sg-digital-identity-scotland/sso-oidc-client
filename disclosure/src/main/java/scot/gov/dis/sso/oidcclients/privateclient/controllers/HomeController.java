@@ -14,6 +14,7 @@ public class HomeController {
     @GetMapping("/")
     public Mono<String> getHome(final Model model, @AuthenticationPrincipal final OidcUser principal) {
         model.addAttribute("claims", principal == null ? Map.of(): principal.getClaims());
+        model.addAttribute("id_token", principal == null ? null : principal.getIdToken().getTokenValue());
         return Mono.just("index");
     }
 }
