@@ -147,6 +147,8 @@ and the client's homepage can be accessed by clicking on
 
 The client's homepage displays two links, one to Sign Up and one to Sign In. 
 
+### Sign Up / Sign In
+
 Clicking `Sign In` and completing the journey authenticates an existing user on 
 the DIS sandbox environment. 
 Clicking `Sign Up` and completing the journey creates a user and automatically 
@@ -161,13 +163,54 @@ exchange in a back-channel request. On success the authorization server issues
 an id token, the client reads the token, extracts sub claim from it, redirects 
 to home page and displays the sub claim under the Sign In and Sign Up links.  
 
-Once authenticated, the user is in session from DIS point of view.
+Once authenticated, the user is in session from the DIS point of view.
 Clicking again `Sign In` or `Sign Up` will look like nothing happens, although 
 the user agent loads the DIS authorization endpoint, which identifies the 
 subject session cookie to a user in session and automatically redirects back 
 to the client.
-Until DIS logout is implemented users can sign out by manually deleting cookies
-under DIS domain at `https://authn.swan.sign-in.service.gov.scot/sign-up/landing-page`.
+Users can manually sign out to trigger authentication by deleting the `sub_sid` cookie
+from the `authz.swan.sign-in.service.gov.scot` domain in the browser. An example of how
+to do this in chrome would be to open the following chrome settings
+`chrome://settings/siteData?searchSubpage=authz&search=cookies` and delete that cookie.
+
+### Logout
+
+There are three variables in the `.env` file which relate to logout:
+- `DIS_END_SESSION_URI` is the logout endpoint on the authorization server.
+- `POST_LOGOUT_REDIRECT_URI` is the endpoint the user is redirected to on the private client,
+ after a succesful logout request.
+- `BACKCHANNEL_LOGOUT_URI` is an endpoint on the private client, that is sent a post request
+every time a user logs out.
+
+Clicking `Logout` will log the user out from the client on the DIS authorization server.
+After a successful logout, the user is redirected to the `POST_LOGOUT_REDIRECT_URI`.
+This private client application has been set up with some basic default behaviour to
+demonstrate the endpoints being called:
+
+- On authorization of a user, a `SESSION` cookie is stored on the private
+client's domain.
+- On redirection of the a user to the `POST_LOGOUT_REDIRECT_URI` after logout, the `SESSION`
+cookie is cleared and the user is redirected back to the home page.
+- The home page no longer displays the logout button and subject session Id. This is because
+clearing the session has removed them from the `@AuthenticationPrincipal` object.
+
+After logging out, if a user were to `Sign In` or `Sign Up` again, then they would not be 
+asked to re-authenticate again. This is because they still have a valid subject session 
+cookie on the authorization server, so will be redirected back to the client with an authorization
+code.
+
+The `BACKCHANNEL_LOGOUT_URI` is called every time a user logs out from the client. On a succesful
+logout, the user is redirected to the `POST_LOGOUT_REDIRECT_URI` AND a post request is sent to the
+`BACKCHANNEL_LOGOUT_URI` from the authorization server.
+
+The `BACKCHANNEL_LOGOUT_URI` must respond with a 200 OK to confirm to the authorization server that
+they have received the request. The response should also include a `Cache-Control: no-store` header
+to prevent the response from interfering with future logout requests
+
+If the private client is running on localhost with a virtual domain, it will not be possible
+for the authorization server to call any endpoints on the private client. This means the post request
+to the `BACKCHANNEL_LOGOUT_URI` will not work. Therefore this endpoint would need to be called manually.
+
 
 ## Notes
 

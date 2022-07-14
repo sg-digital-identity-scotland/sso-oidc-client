@@ -23,9 +23,11 @@ spring:
             scope:
               - openid
             redirect-uri : ${REDIRECT_URI}
+            post-logout-redirect-uri : ${POST_LOGOUT_REDIRECT_URI}
         provider:
           dis:
             issuer-uri: ${DIS_ISSUER_URI}
+            end-session-uri: ${DIS_END_SESSION_URI}
 
 jwk:
   keypair: ${JWK_KEYPAIR}

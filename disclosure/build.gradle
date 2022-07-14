@@ -29,7 +29,7 @@ test {
 
 jib {
 	from {
-		image 'gcr.io/distroless/java11-debian11@sha256:4ab3d56ef3c5ea3c652096041e8f6ae12a40940ac5af81b3041a958bf0d72d1f'
+		image 'gcr.io/distroless/java11-debian11@sha256:8073aa09c291670715e7443b387f63a8b1eadc193e450e281af221a04983c44a'
 	}
 	to {
 		def imageName = project.getProperties().get('IMAGE_NAME')

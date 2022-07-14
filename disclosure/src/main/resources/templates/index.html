@@ -68,8 +68,10 @@
             <div><a class="link" th:href="@{/oauth2/authorization/dis(dis_prompt='create_account')}" data-test="link-to-sign-up">Sign Up</a></div>
             <div><a class="link" th:href="@{/oauth2/authorization/dis}" data-test="link-to-sign-in">Sign In</a></div>
         </div>
-        <div sec:authorize="isAuthenticated()">
+        <div th:if="${id_token != null}">
+            <div><a class="link" th:href="@{/logout}" data-test="link-to-logout">Logout</a></div>
             <p th:text="${claims.get('sub')}"></p>
         </div>
+
     </body>
 </html>
