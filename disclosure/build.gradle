@@ -1,8 +1,8 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.2'
+	id 'org.springframework.boot' version '2.7.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'com.google.cloud.tools.jib' version '3.1.4'
+	id 'com.google.cloud.tools.jib' version '3.2.0'
 }
 
 group = 'scot.gov.dis.sso.oidcclients'
@@ -14,13 +14,11 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-webflux:2.6.2'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.6.2'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.6.2'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux:2.7.2'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.2'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.7.2'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE'
-	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
 }
 
 test {
@@ -29,7 +27,7 @@ test {
 
 jib {
 	from {
-		image 'gcr.io/distroless/java11-debian11@sha256:8073aa09c291670715e7443b387f63a8b1eadc193e450e281af221a04983c44a'
+		image 'gcr.io/distroless/java11-debian11@sha256:dee9240c64471f1776a6b37f315890aba14ff4bc89ad247eeb34ec79fdeb24f4'
 	}
 	to {
 		def imageName = project.getProperties().get('IMAGE_NAME')

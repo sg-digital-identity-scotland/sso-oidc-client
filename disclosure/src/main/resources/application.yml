@@ -20,8 +20,7 @@ spring:
             client-id: ${DIS_CLIENT_ID}
             client-authentication-method: private_key_jwt
             authorization-grant-type: authorization_code
-            scope:
-              - openid
+            scope: ${SCOPE:openid}
             redirect-uri : ${REDIRECT_URI}
             post-logout-redirect-uri : ${POST_LOGOUT_REDIRECT_URI}
         provider:

@@ -13,7 +13,7 @@ while [ $# -gt 0 ]; do
 done
 
 IMAGE_NAME=${IMAGE_NAME:-"oidc-private-client-springboot"}
-IMAGE_TAG=${IMAGE_TAG:-"0.0.1"}
+IMAGE_TAG=${IMAGE_TAG:-"1.0.0"}
 CONTAINER_NAME=${IMAGE_NAME}
 
 CONTAINER_STATUS=$(docker ps -a -f name=${CONTAINER_NAME} --format "{{.Status}}")
@@ -34,6 +34,18 @@ for line in $(cat ${PROJECT_DIR}/env)
 do
   export "${line//$'\r'}"
 done
+
+if [[ "${PROTOCOL:-""}" == http ]]
+then
+  SSL_ENABLED=false
+elif [[ "${PROTOCOL:-""}" == https ]]
+then
+  SSL_ENABLED=true
+else
+  echo "Invalid PROTOCOL value '${PROTOCOL:-""}'. Value must be 'http' or 'https'."
+  exit 1
+fi
+
 for line in $(cat ${PROJECT_DIR}/registration/client)
 do
   export "${line//$'\r'}"
@@ -47,9 +59,9 @@ docker run \
   --env-file ${PROJECT_DIR}/registration/client \
   --env-file ${PROJECT_DIR}/env \
   -e JWK_KEYPAIR="${JWK_KEYPAIR}" \
+  -e SSL_ENABLED="${SSL_ENABLED}" \
   -d \
-  ${IMAGE_NAME}:${IMAGE_TAG} \
-  >/dev/null 2>&1
+  ${IMAGE_NAME}:${IMAGE_TAG}
 
 echo ""
 echo "----------------------------------------------------------------"
@@ -61,5 +73,5 @@ echo "Container:"
 echo "  Name: ${CONTAINER_NAME}"
 echo "  Network: ${NETWORK}"
 echo "Endpoints:"
-echo "  From host:             https://${HOST}:${PORT}"
-echo "  From Docker container: https://${CONTAINER_NAME}:${PORT}"
+echo "  From host:             ${PROTOCOL}://${HOST}:${PORT}"
+echo "  From Docker container: ${CONTAINER_NAME}:${PORT}"

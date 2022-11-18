@@ -1,3 +1,5 @@
+#!/bin/bash
+
 CONTAINER_NAME=${CONTAINER_NAME:-"oidc-private-client-springboot"}
 CONTAINER_STATUS=$(docker ps -a -f name=${CONTAINER_NAME} --format "{{.Status}}")
 

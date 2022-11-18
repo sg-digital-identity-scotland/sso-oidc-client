@@ -9,8 +9,6 @@ import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.util.Base64URL;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.oauth2.client.endpoint.NimbusJwtClientAuthenticationParametersConverter;
-import org.springframework.security.oauth2.client.endpoint.WebClientReactiveAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.stereotype.Component;
 
@@ -18,17 +16,12 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-class AccessTokenResponseClient extends WebClientReactiveAuthorizationCodeTokenResponseClient {
+public class AccessTokenJwkResolver {
 
     @Value("${jwk.keypair}")
     private String jwkKeyPair;
 
-    public AccessTokenResponseClient() {
-        this.addParametersConverter(
-                new NimbusJwtClientAuthenticationParametersConverter<>(accessTokenJwkResolver()));
-    }
-
-    private Function<ClientRegistration, JWK> accessTokenJwkResolver() {
+    public Function<ClientRegistration, JWK> getAccessTokenJwkResolver() {
         Function<ClientRegistration, JWK> jwkResolver = (clientRegistration) -> {
             ObjectMapper mapper = new ObjectMapper();
             try {
