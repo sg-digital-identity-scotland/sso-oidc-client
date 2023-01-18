@@ -74,6 +74,7 @@
             <div><a class="link" th:href="@{/refresh_access_token}" data-test="link-to-logout">Refresh Access Token if Expired</a></div>
             <div><a class="link" th:href="@{/logout}" data-test="link-to-logout">Logout</a></div>
             <p th:text="${claims.get('sub')}"></p>
+            <p th:text="${id_token}"></p>
         </div>
 
     </body>
